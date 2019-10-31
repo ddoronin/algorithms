@@ -1,10 +1,31 @@
-html {
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Ubuntu', sans-serif;
   background-color: #282c34;
   color: white;
+  height: 100vh;
+}
+
+a {
+  color: #19e4ff;
 }
 
 .App {
-  
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-bar {
+  margin: 0;
+  padding: 8px;
+  width: 100px;
+}
+
+.content {
+  margin: 0;
+  padding: 8px;
+  flex: 1;
 }
 
 .App-logo {

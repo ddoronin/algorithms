@@ -1,25 +1,31 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from 'react-router-dom';
 import './App.css';
-import { Graph } from 'graph/lib/types'
-import { bfs, dfs } from 'graph/lib/traversal'
-
-const g: Graph = [
-  [1, 2, 3],
-  [],
-  [],
-  []
-]
+import Graphs from './graphs';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <pre>{JSON.stringify(g, null, '\t')}</pre>
-        BFS:
-        <pre>{JSON.stringify(bfs(g), null, '\t')}</pre>
-        DFS:
-        <pre>{JSON.stringify(dfs(g), null, '\t')}</pre>
-      </header>
+      <Router>
+        <ul className="nav-bar">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/graphs">Graphs</Link>
+          </li>
+        </ul>
+        <div className="content">
+          <Switch>
+            <Route path="/graphs" component={Graphs} />
+          </Switch>
+        </div>
+      </Router>
     </div>
   );
 }
