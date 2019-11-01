@@ -1,0 +1,14 @@
+node_modules
+*/*/node_modules
+.dockerignore
+Dockerfile
+npm-debug.log
+.git
+*/*/dist
+*/*/www
+.coveralls.yml
+.gitignore
+.idea
+.travis.yml
+.DS_Store
+*/*/.DS_Store
