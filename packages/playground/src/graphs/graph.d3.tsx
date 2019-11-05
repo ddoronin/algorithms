@@ -35,7 +35,7 @@ function GraphD3({ g }: GraphD3Props) {
             // Per-type markers, as they don't inherit styles.
             const marker = svg.append("defs")
                 .selectAll("marker")
-                .data(["suit", "licensing", "resolved"])
+                .data(["arrow"])
                 .enter()
                 .append("marker")
                 .attr("id", 'arrow')
@@ -114,10 +114,9 @@ function GraphD3({ g }: GraphD3Props) {
             .style("fill", "#69b3a2")
             .attr("cx", getX)
             .attr("cy", getY);
-    
     }
     useEffect(init, [g]);
-    return <div id={elid} >Render</div>
+    return <div id={elid}></div>
 }
 
 export default GraphD3;
