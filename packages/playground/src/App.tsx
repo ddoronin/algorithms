@@ -12,14 +12,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Router>
-        <ul className="nav-bar">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/graphs">Graphs</Link>
-          </li>
-        </ul>
+        <Link to="/">Home</Link> {'/'} <Link to="/graphs">Graphs</Link>
         <div className="content">
           <Switch>
             <Route path="/graphs" component={Graphs} />

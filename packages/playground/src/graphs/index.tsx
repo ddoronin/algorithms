@@ -24,9 +24,11 @@ export default function Graphs() {
 
   return (
     <div className="App-header">
+      <div style={{border: 'dotted black 1px'}}>
+        <GraphD3 g={g.g}/>
+      </div>
       <textarea ref={inputRef} name="graph" defaultValue={JSON.stringify(g.g)}/>
       <button onClick={updateG}>APPLY</button>
-      <GraphD3 g={g.g} key={g.id}/>
     </div>
   );
 }

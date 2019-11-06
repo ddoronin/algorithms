@@ -12,8 +12,6 @@ a {
 }
 
 .App {
-  display: flex;
-  flex-direction: row;
 }
 
 .nav-bar {

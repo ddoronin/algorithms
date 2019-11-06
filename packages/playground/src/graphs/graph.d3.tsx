@@ -1,122 +1,106 @@
-import React, { useRef, useMemo, useEffect } from 'react';
-import * as d3 from 'd3';
+import React, { useMemo } from 'react';
 import { Graph, analyse } from 'graph';
 
 interface GraphD3Props {
-    g: Graph
+    g: Graph;
+    className?: string;
+    width?: number;
+    height?: number;
 }
 
-let gid: number = 0;
+function GraphD3({ g, width = 640, height = 640 }: GraphD3Props) {
+    const { levelNodes, levelCount, links, token } = useMemo(() => {
+        // Each level has a list of nodes.
+        const levelNodes = analyse(g);
 
-function GraphD3({ g }: GraphD3Props) {
-    const elid = 'canvas' + useMemo(() => gid++, []);
-    const levelNodes = useMemo(() => analyse(g), [g]);
-    const levelCount = useMemo(() => levelNodes.map(nodes => nodes.length), levelNodes)
-    const links = useMemo(() => {
-        const pairs: Array<[number, number]> = [];
+        // Number of nodes on each level.
+        const levelCount = levelNodes.map(nodes => nodes.length);
+
+        // Collection of pairs of nodes ("from" and "to").
+        const links: Array<[number, number]> = [];
         for (let i = 0; i < g.length; i++) {
             for (const v of g[i]) {
-                pairs.push([i, v]);
+                links.push([i, v]);
             }
         }
-        return pairs;
+
+        const token = JSON.stringify(g);
+        return { token, levelNodes, levelCount, links };
     }, [g]);
-    function init() {
-        const width = 640;
-        const height = 480;
-        const dy = height / levelCount.length;
 
-        const svg = d3
-            .select('#' + elid)
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height);
+    const r = 6;
+    const h = height - 2 * r;
+    const w = width - 2 * r;
 
-            // Per-type markers, as they don't inherit styles.
-            const marker = svg.append("defs")
-                .selectAll("marker")
-                .data(["arrow"])
-                .enter()
-                .append("marker")
-                .attr("id", 'arrow')
-                .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 15)
-                .attr("refY", 0)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
-                .attr("orient", "auto")
-                .append("path")
-                .attr("d", "M0,-5L10,0L0,5")
-                .style("fill", "#666");
+    const dy = levelCount.length <= 1? h: h / (levelCount.length - 1);
+    const dx = (n: number) => n <= 1? w: w / (n - 1);
 
-        var path = svg.append("g")
-            .selectAll("line")
-            .data(links)
-            .enter()
-            .append("line")
-            .style("stroke", "#666")
-            .style("stroke-width", "1.5px")
-            .attr("x1", link => {
-                const [from, to] = link;
-                return getX(g[from], from);
-            })
-            .attr("y1", link => {
-                const [from, to] = link;
-                return getY(g[from], from);
-            })
-            .attr("x2", link => {
-                const [from, to] = link;
-                return getX(g[to], to);
-            })
-            .attr("y2", link => {
-                const [from, to] = link;
-                return getY(g[to], to);
-            })
-            .attr("marker-end", "url(#arrow)");
-
-        var text = svg.append("g").selectAll("text")
-            .data(g)
-            .enter()
-            .append("text")
-            .attr("x", (list, v) => getX(list, v) + 10)
-            .attr("y", (list, v) => getY(list, v) + 5)
-            .style("fill", 'rgb(105, 179, 162)')
-            .text(function(list, v) { return v; });
-
-        function getX(list: number[], v: number) { 
-            for (let level = 0; level < levelNodes.length; level++) {
-                const idx = levelNodes[level].indexOf(v);
-                if (idx !== -1) {
-                    const w = (width - 2 * 6);
-                    return 6 + w / (levelCount[level] + 1) + idx * w / (levelCount[level]);
-                }
+    function getX(list: number[], v: number) { 
+        for (let level = 0; level < levelNodes.length; level++) {
+            const idx = levelNodes[level].indexOf(v);
+            if (idx !== -1) {
+                const ddx = dx(levelCount[level]);
+                return r + idx * ddx;
             }
-            return 0;
         }
-
-        function getY(list: number[], v: number) { 
-            for (let level = 0; level < levelNodes.length; level++) {
-                const idx = levelNodes[level].indexOf(v);
-                if (idx !== -1) {
-                    return 6 + level * dy;
-                }
-            }
-            return 0; 
-        }
-
-        var circle = svg
-            .append("g")
-            .selectAll("circle")
-            .data(g)
-            .enter()
-            .append("circle")
-            .attr("r", 6)
-            .style("fill", "#69b3a2")
-            .attr("cx", getX)
-            .attr("cy", getY);
+        return r;
     }
-    useEffect(init, [g]);
-    return <div id={elid}></div>
+
+    function getY(list: number[], v: number) { 
+        for (let level = 0; level < levelNodes.length; level++) {
+            const idx = levelNodes[level].indexOf(v);
+            if (idx !== -1) {
+                return r + level * dy;
+            }
+        }
+        return r;
+    }
+
+    return (
+        <svg width={width} height={height}>
+            <defs>
+                <marker 
+                    id="arrow" 
+                    viewBox="0 -5 10 10" 
+                    refX={15} 
+                    refY={0}
+                    markerWidth={6}
+                    markerHeight={6}
+                    orient="auto">
+                    <path d="M0,-5L10,0L0,5" fill="#666"/>
+                </marker>
+            </defs>
+            <g>
+                {links.map(([from, to]) => 
+                    <line 
+                        key={`${from}-${to}-${token}`} 
+                        stroke="#666"
+                        stroke-width="1.5px"
+                        marker-end="url(#arrow)"
+                        x1={getX(g[from], from)}
+                        y1={getY(g[from], from)}
+                        x2={getX(g[to], to)}
+                        y2={getY(g[to], to)}
+                    />
+                )}
+            </g>
+            <g>
+                {g.map((list, v) => 
+                    <circle key={`${v}-${token}`} r={6} fill="#69b3a2" cx={getX(list,v)} cy={getY(list, v)}/>
+                )}
+            </g>
+            <g>
+                {g.map((list, v) => 
+                    <text 
+                        key={`${v}-${token}`} 
+                        x={getX(list, v) + 10}
+                        y={getY(list, v) + 5}
+                        fill="rgb(105, 179, 162)"
+                    >{v}</text>
+                )}
+            </g>
+        </svg>
+    )
 }
 
 export default GraphD3;
