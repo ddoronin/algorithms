@@ -1,7 +1,6 @@
 {
   "name": "@1am/playground",
   "version": "0.1.1",
-  "private": true,
   "dependencies": {
     "@1am/digraph": "^1.0.1",
     "@1am/graph": "^1.0.1",

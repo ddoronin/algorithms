@@ -10,5 +10,6 @@
   },
   "dependencies": {
     "typescript": "3.7.1-rc"
-  }
+  },
+  "gitHead": "46effe8bd0ccb69619fc7ed4dc6f3f77141020d2"
 }
