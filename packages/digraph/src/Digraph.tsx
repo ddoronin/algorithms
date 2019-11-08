@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Graph, analyse } from 'graph';
+import { Graph, analyse } from '@1am/graph';
 
 interface DigraphProps {
     g: Graph;

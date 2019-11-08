@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Graph } from 'graph';
-import { Digraph } from 'digraph';
+import { Graph } from '@1am/graph';
+import { Digraph } from '@1am/digraph';
 
 export default function Graphs() {
   const [g, setG] = useState<{g: Graph, id: number}>({g: [
