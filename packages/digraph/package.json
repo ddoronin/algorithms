@@ -1,0 +1,22 @@
+{
+  "name": "digraph",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc --watch -p ./tsconfig.json -d --outDir lib",
+    "build": "tsc -p ./tsconfig.json -d --outDir lib"
+  },
+  "peerDependencies": {
+    "@types/node": "12.12.3",
+    "@types/react": "16.9.11",
+    "@types/react-dom": "16.9.3",
+    "graph": "^1.0.0",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
+  },
+  "devDependencies": {
+    "typescript": "3.7.1-rc"
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Graph, bfs, dfs } from 'graph';
-import GraphD3 from './graph.d3';
+import { Graph } from 'graph';
+import { Digraph } from 'digraph';
 
 export default function Graphs() {
   const [g, setG] = useState<{g: Graph, id: number}>({g: [
@@ -24,9 +24,7 @@ export default function Graphs() {
 
   return (
     <div className="App-header">
-      <div style={{border: 'dotted black 1px'}}>
-        <GraphD3 g={g.g}/>
-      </div>
+      <Digraph g={g.g}/>
       <textarea ref={inputRef} name="graph" defaultValue={JSON.stringify(g.g)}/>
       <button onClick={updateG}>APPLY</button>
     </div>
